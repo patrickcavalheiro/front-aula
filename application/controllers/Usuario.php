@@ -14,7 +14,7 @@ class Usuario extends CI_Controller {
         $this->load->view('header', $this->data);          
 
         $this->load->library('Wsaulaservice');
-        $this->data['usuarios'] = $this->wsaulaservice->get('rest/api/usuario');
+        $this->data['usuarios'] = $this->wsaulaservice->get('rest/usuario/');
 
         $this->load->view('listaUsuarios', $this->data);
         $this->load->view('footer', $this->data);
