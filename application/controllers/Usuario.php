@@ -14,10 +14,38 @@ class Usuario extends CI_Controller {
         $this->load->view('header', $this->data);          
 
         $this->load->library('Wsaulaservice');
-        $this->data['usuarios'] = $this->wsaulaservice->get('rest/usuario/');
+        $this->data['usuarios'] = $this->wsaulaservice->get('usuario');
 
         $this->load->view('listaUsuarios', $this->data);
         $this->load->view('footer', $this->data);
+    }
+
+    public function cadastrar() {
+        $this->form_validation->set_rules('email', 'email', 'required');
+        $this->form_validation->set_rules('senha', 'senha', 'required');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->load->view('header', $this->data);
+            $this->load->view('formUsuario', $this->data);
+            $this->load->view('footer', $this->data);
+        } else {
+            //resgatamos os dados vindos por post
+            $dados = array(
+                'email' => $this->input->post('email'),
+                'senha' => $this->input->post('senha')
+            );
+
+            $this->load->library('Wsaulaservice');
+            $retorno = $this->wsaulaservice->post('usuario', $dados);
+
+            if(array_key_exists('status', $retorno) && ($retorno->status == true)) {
+                $this->session->set_flashdata('message', $retorno->message);
+                redirect('usuario');
+            } else {
+                $this->session->set_flashdata('message', $retorno->error);
+                redirect('usuario/cadastrar');
+            }
+        }            
     }
 
 }
