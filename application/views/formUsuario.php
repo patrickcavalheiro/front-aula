@@ -1,3 +1,4 @@
+<?php error_reporting(0); ?>
 <h2>Cadastro de Usuários</h2>
 <div class="message">
     <?php
@@ -6,9 +7,9 @@
         }
     ?>
 </div>
-<form action="<?= $url; ?>usuario/cadastrar" method="post" name="cadastro-usuario">
+<form action="<?= $url . ((isset($usuario)) ? 'usuario/alterar/' . $usuario->id : 'usuario/cadastrar'); ?>" method="post" name="cadastro-usuario">
     <label for="email">E-mail:</label>
-    <input type="text" name="email" id="email" value="">
+    <input type="text" name="email" id="email" value="<?= $usuario->email; ?>">
     <br><br>
 
     <label for="senha">Senha:</label>

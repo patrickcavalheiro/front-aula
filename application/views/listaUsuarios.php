@@ -20,7 +20,7 @@
             <tr>
                 <td><?= $u->id; ?></td>
                 <td><?= $u->email; ?></td>
-                <td></td>
+                <td><a href="<?= $url . 'usuario/alterar/' . $u->id; ?>">Alterar</a></td>
             </tr>
         <?php } ?>
     </tbody>

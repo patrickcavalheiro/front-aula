@@ -48,6 +48,42 @@ class Usuario extends CI_Controller {
         }            
     }
 
+    public function alterar($id = 0) {
+        if ($id === 0){
+            redirect('usuario');
+        } else {
+            $this->form_validation->set_rules('email', 'email', 'required');
+            $this->form_validation->set_rules('senha', 'senha', 'required');
+
+            if ($this->form_validation->run() == FALSE) {
+                $this->load->view('header', $this->data);
+                //carregamos a library para buscar o usuário que deve ser alterado
+                $this->load->library('Wsaulaservice');
+                $this->data['usuario'] = $this->wsaulaservice->get('usuario/index/id/'.$id);
+
+                $this->load->view('formUsuario', $this->data);
+                $this->load->view('footer', $this->data);
+            } else {
+                //resgatamos os dados vindos por post do FORMULÁRIO da VIEW
+                $dados = array(
+                    'email' => $this->input->post('email'),
+                    'senha' => $this->input->post('senha')
+                );
+
+                $this->load->library('Wsaulaservice');
+                $retorno = $this->wsaulaservice->put('usuario/index/id/'. $id, $dados);
+
+                if(array_key_exists('status', $retorno) && ($retorno->status == true)) {
+                    $this->session->set_flashdata('message', $retorno->message);
+                    redirect('usuario');
+                } else {
+                    $this->session->set_flashdata('message', $retorno->error);
+                    redirect('usuario/alterar/'.$id);
+                }
+            }
+        }
+    }
+
 }
 
 /* End of file Usuario.php */

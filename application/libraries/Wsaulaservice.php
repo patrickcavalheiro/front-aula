@@ -59,4 +59,29 @@ class Wsaulaservice {
             return false;
         }
     }
+
+    public function put($endpoint = '', $dados = null) {
+        if ($endpoint != '' && $dados != null) {
+            try {
+                /* realiza a requisição para a API */
+                $this->curl = curl_init();
+                curl_setopt($this->curl, CURLOPT_URL, $this->url_ws . $endpoint);
+                curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($this->curl, CURLOPT_HTTPHEADER, array('token: ' . $this->token));
+                /* --- requisição PUT ---- */
+                curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'PUT');
+                curl_setopt($this->curl, CURLOPT_POSTFIELDS, urldecode(http_build_query($dados)));
+
+                $retornoApi = curl_exec($this->curl);
+                curl_close($this->curl);
+
+                return json_decode($retornoApi);
+            } catch (Throwable $t) {                
+                error_clear_last();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
